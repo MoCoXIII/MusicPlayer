@@ -1,0 +1,26 @@
+[
+    {
+        "media_index": 0,
+        "media_start": 0,
+        "file_path": "media/beau_soir.mp3",
+        "fade_duration": 3000
+    },
+    {
+        "media_index": 1,
+        "media_start": 0,
+        "file_path": "media/Ravel-TombeaudeCouperin-Seitzer.mp3",
+        "fade_duration": 3000
+    },
+    {
+        "media_index": 2,
+        "media_start": 0,
+        "file_path": "media/Bol\u00e9ro.mp3",
+        "fade_duration": 3000
+    },
+    {
+        "media_index": 3,
+        "media_start": 0,
+        "file_path": "media/L'Apprenti_Sorcier.mp3",
+        "fade_duration": 3000
+    }
+]
