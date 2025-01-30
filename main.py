@@ -88,15 +88,22 @@ def next_media(e):
     play_media(media_list[current_media_index])
 
 
-keyboard.on_press_key("j", suppress=True, callback=previous_media)
-keyboard.on_press_key("k", suppress=True, callback=pause_media)
-keyboard.on_press_key("l", suppress=True, callback=next_media)
+def on_press(key):
+    if key == keyboard.KeyCode.from_char('i'):
+        print("Stopping")
+        stop_media()
+        time.sleep(3)
+        exit()
+    elif key == keyboard.KeyCode.from_char('j'):
+        previous_media(None)
+    elif key == keyboard.KeyCode.from_char('k'):
+        pause_media(None)
+    elif key == keyboard.KeyCode.from_char('l'):
+        next_media(None)
+
 
 current_media_index = 0
 current_media_time = 0
 
-keyboard.wait("i", suppress=True)
-
-print("Stopping")
-stop_media()
-time.sleep(10)
+with keyboard.Listener(on_press=on_press) as listener:
+    listener.join()
