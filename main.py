@@ -3,7 +3,7 @@ import os
 import time
 
 import pygame
-import keyboard
+from pynput import keyboard
 
 pygame.init()
 pygame.mixer.init()
