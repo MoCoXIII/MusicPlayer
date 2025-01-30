@@ -33,11 +33,20 @@ for filename in os.listdir(MEDIA_FOLDER):
             'fade_duration': 3000
         })
 
+for i, media in enumerate(media_list):
+    if isinstance(media['media_index'], list):
+        new_media_list = []
+        for j in range(len(media['media_index'])):
+            new_media = {key: value[j] if isinstance(value, list) else value for key, value in media.items()}
+            new_media['media_index'] = media['media_index'][j]
+            new_media_list.append(new_media)
+        media_list[i:i+1] = new_media_list
+
 media_list.sort(key=lambda media: media['media_index'])
 
 # Save updated media.json file
 with open(MEDIA_JSON_FILE, 'w') as f:
-    json.dump(media_list, f, indent=4)
+    json.dump(media_list, f, indent=4, sort_keys=True)
 
 
 def stop_media():
@@ -86,7 +95,7 @@ keyboard.on_press_key("l", suppress=True, callback=next_media)
 current_media_index = 0
 current_media_time = 0
 
-keyboard.wait("i", trigger_on_release=True, suppress=True)
+keyboard.wait("i", suppress=True)
 
 print("Stopping")
 stop_media()
