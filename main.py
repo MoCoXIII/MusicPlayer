@@ -1,7 +1,6 @@
 import json
 import os
 import time
-
 import pygame
 from pynput import keyboard
 
@@ -9,8 +8,9 @@ pygame.init()
 pygame.mixer.init()
 
 # Constants
-MEDIA_FOLDER = 'media/'
-MEDIA_JSON_FILE = 'media.json'
+AUDIO_FOLDER = 'audio/'
+PDF_FOLDER = 'pdf/'
+MEDIA_JSON_FILE = 'operations.json'
 media_list = []
 
 # Load or create media.json file
@@ -22,14 +22,12 @@ with open(MEDIA_JSON_FILE, 'r') as f:
     media_list = json.load(f)
 
 # Add media files to json if not already present
-for filename in os.listdir(MEDIA_FOLDER):
-    filepath = os.path.join(MEDIA_FOLDER, filename)
-
-    if not any(media['file_path'] == filepath for media in media_list):
+for filename in os.listdir(AUDIO_FOLDER):
+    if not any(media.get('audio') == filename for media in media_list):
         media_list.append({
             'media_index': len(media_list),
             'media_start': 0,
-            'file_path': filepath,
+            'audio': filename,
             'fade_duration': 3000
         })
 
@@ -51,15 +49,20 @@ with open(MEDIA_JSON_FILE, 'w') as f:
 
 def stop_media():
     global current_media_time, media_list
-    pygame.mixer_music.fadeout(media_list[current_media_index]['fade_duration'])
+    fd = media_list[current_media_index].get('fade_duration')
+    pygame.mixer_music.fadeout(fd if fd else 3000)
 
 
 # Function to play media
 def play_media(media):
     stop_media()
-    pygame.mixer_music.load(media['file_path'])
-    pygame.mixer_music.play(start=media['media_start'], fade_ms=media['fade_duration'])
-    print(f"Playing {media['file_path']} from {media['media_start']} seconds")
+    if media.get('audio'):
+        pygame.mixer_music.load(AUDIO_FOLDER + media.get('audio'))
+        pygame.mixer_music.play(start=media['media_start'], fade_ms=media.get('fade_duration'))
+        print(f"Playing {media.get('audio')} from {media['media_start']} seconds")
+    if media.get('pdf'):
+        print(f"Opening {media['pdf']}")
+        os.system(f"start {PDF_FOLDER}{media['pdf']}")
 
 
 # Function to handle keypresses
@@ -74,11 +77,11 @@ def pause_media(e):
     if pygame.mixer_music.get_busy():
         current_media_time = pygame.mixer_music.get_pos() / 1000
         stop_media()
-        print(f"Paused {media_list[current_media_index]['file_path']} at {current_media_time} seconds")
+        print(f"Paused {media_list[current_media_index].get('audio')} at {current_media_time} seconds")
     else:
-        pygame.mixer_music.load(media_list[current_media_index]['file_path'])
-        pygame.mixer_music.play(start=current_media_time, fade_ms=media_list[current_media_index]['fade_duration'])
-        print(f"Resumed {media_list[current_media_index]['file_path']} from {current_media_time} seconds")
+        pygame.mixer_music.load(AUDIO_FOLDER + media_list[current_media_index].get('audio'))
+        pygame.mixer_music.play(start=current_media_time, fade_ms=media_list[current_media_index].get('fade_duration'))
+        print(f"Resumed {media_list[current_media_index].get('audio')} from {current_media_time} seconds")
 
 
 def next_media(e):
