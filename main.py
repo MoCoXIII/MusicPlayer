@@ -8,7 +8,7 @@ pygame.init()
 pygame.mixer.init()
 
 # Constants
-AUDIO_FOLDER = 'audio/'
+AUDIO_FOLDER = 'audios/'
 PDF_FOLDER = 'pdf/'
 MEDIA_JSON_FILE = 'operations.json'
 media_list = []
